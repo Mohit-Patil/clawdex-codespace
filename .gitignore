@@ -1,0 +1,9 @@
+node_modules/
+.env.secure
+.bridge-updater.log
+.bridge-update-status.json
+services/rust-bridge/.env
+services/rust-bridge/.DS_Store
+services/rust-bridge/security_best_practices_report.md
+services/rust-bridge/target/
+.DS_Store

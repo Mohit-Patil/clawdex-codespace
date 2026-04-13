@@ -1,0 +1,16 @@
+{
+  "name": "clawdex-codespace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Minimal GitHub Codespaces template repo for Clawdex bridge bootstrap",
+  "license": "MIT",
+  "scripts": {
+    "codespaces:bootstrap": "node ./scripts/codespaces-bootstrap.js",
+    "secure:setup": "./scripts/setup-secure-dev.sh",
+    "secure:bridge": "node ./scripts/start-bridge-secure.js",
+    "secure:bridge:dev": "node ./scripts/start-bridge-secure.js --dev"
+  },
+  "dependencies": {
+    "qrcode-terminal": "^0.12.0"
+  }
+}

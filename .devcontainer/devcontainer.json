@@ -1,0 +1,22 @@
+{
+  "name": "Clawdex Codespace",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-20-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/rust:1": {}
+  },
+  "forwardPorts": [
+    8787,
+    8788
+  ],
+  "portsAttributes": {
+    "8787": {
+      "label": "Clawdex Bridge"
+    },
+    "8788": {
+      "label": "Clawdex Preview"
+    }
+  },
+  "postCreateCommand": "npm install --include=dev",
+  "postStartCommand": "npm run codespaces:bootstrap"
+}
