@@ -121,6 +121,15 @@ function isCodespacesMode(env) {
   return networkMode === "codespaces" || rawCodespaces === "true";
 }
 
+function resolveBridgeBuildProfile(env) {
+  const explicitProfile = readNonEmptyEnv(env, "CLAWDEX_BRIDGE_BUILD_PROFILE").toLowerCase();
+  if (explicitProfile === "debug" || explicitProfile === "release") {
+    return explicitProfile;
+  }
+
+  return isCodespacesMode(env) ? "debug" : "release";
+}
+
 function isCodespacesAutoPublicEnabled(env) {
   const raw = readNonEmptyEnv(env, "BRIDGE_CODESPACES_AUTO_PUBLIC").toLowerCase();
   return raw ? raw !== "false" : true;
@@ -707,9 +716,12 @@ async function spawnDetachedAndWait(command, args, options) {
   }
 }
 
-function buildBridgeFromSource(rootDir, env) {
+function buildBridgeFromSource(rootDir, env, profile) {
   const cargoCmd = "cargo";
-  const args = ["build", "--release", "--locked"];
+  const args = ["build", "--locked"];
+  if (profile === "release") {
+    args.push("--release");
+  }
   const result = spawnSync(cargoCmd, args, {
     cwd: path.join(rootDir, "services", "rust-bridge"),
     env,
@@ -758,6 +770,7 @@ function resolveLaunch(rootDir, env, { devMode, forceSourceBuild }) {
     };
   }
 
+  const buildProfile = resolveBridgeBuildProfile(env);
   const packagedBinary = packagedBinaryPath(rootDir, resolveRuntimeTarget());
   if (!forceSourceBuild && packagedBinary && fs.existsSync(packagedBinary)) {
     ensureExecutable(packagedBinary);
@@ -770,7 +783,7 @@ function resolveLaunch(rootDir, env, { devMode, forceSourceBuild }) {
     };
   }
 
-  const builtBinary = builtBinaryPath(rootDir, os.platform());
+  const builtBinary = builtBinaryPath(rootDir, os.platform(), buildProfile);
   if (isBuiltBinaryFresh(rootDir, builtBinary)) {
     ensureExecutable(builtBinary);
     return {
@@ -794,7 +807,7 @@ function resolveLaunch(rootDir, env, { devMode, forceSourceBuild }) {
     process.exit(1);
   }
 
-  buildBridgeFromSource(rootDir, env);
+  buildBridgeFromSource(rootDir, env, buildProfile);
 
   if (!fs.existsSync(builtBinary)) {
     console.error(`error: expected built bridge binary at ${builtBinary}, but it was not created.`);
@@ -826,8 +839,14 @@ async function start() {
     env.BRIDGE_RUN_MODE = "dev";
   }
   const backgroundMode = process.argv.includes("--background");
+  const prepareOnly = process.argv.includes("--prepare-only");
   const forceSourceBuild = env.CLAWDEX_BRIDGE_FORCE_SOURCE_BUILD === "true";
   const launch = resolveLaunch(rootDir, env, { devMode, forceSourceBuild });
+
+  if (prepareOnly) {
+    console.log(`Bridge binary ready: ${launch.command}`);
+    return;
+  }
 
   if (backgroundMode) {
     await spawnDetachedAndWait(launch.command, launch.args, {

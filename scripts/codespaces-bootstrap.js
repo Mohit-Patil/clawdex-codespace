@@ -74,6 +74,7 @@ function commandExists(command) {
 function parseArgs(argv) {
   return {
     noStart: argv.includes("--no-start"),
+    prepareOnly: argv.includes("--prepare-only"),
     force: argv.includes("--force"),
   };
 }
@@ -143,6 +144,26 @@ function ensureCodexCliInstalled(secureEnv) {
   console.log("Codex CLI installed.");
 }
 
+function prepareBridgeBinary(rootDir, secureEnv) {
+  console.log("Prebuilding bridge binary for faster Codespaces startup...");
+  const prepareEnv = {
+    ...process.env,
+    ...secureEnv,
+  };
+  const result = runCommand(
+    process.execPath,
+    [path.join(rootDir, "scripts", "start-bridge-secure.js"), "--prepare-only"],
+    {
+      cwd: rootDir,
+      env: prepareEnv,
+    }
+  );
+
+  if ((result.status ?? 1) !== 0) {
+    process.exit(result.status ?? 1);
+  }
+}
+
 function startBridge(rootDir) {
   console.log("Starting bridge in background for this codespace...");
   const result = runCommand(
@@ -180,6 +201,11 @@ function main() {
   }
 
   ensureCodexCliInstalled(secureEnv);
+  if (options.prepareOnly) {
+    prepareBridgeBinary(rootDir, secureEnv);
+    console.log("Codespaces bootstrap prepared Codex and the bridge binary without starting the bridge.");
+    return;
+  }
   startBridge(rootDir);
 }
 
