@@ -2,27 +2,25 @@
 
 Minimal GitHub Codespaces template repo for Clawdex.
 
-Purpose:
-
-- create a user-owned fork quickly
-- start a Codespace with the right devcontainer bootstrap
-- run the Clawdex Rust bridge in Codespaces without pulling the full mobile app repo
+This template no longer vendors the Clawdex scripts or Rust bridge source. The
+Codespace installs the published `clawdex-mobile` npm package during
+`postCreateCommand`, then runs the packaged Codespaces bootstrap from there.
 
 ## What Happens In Codespaces
 
 On create/resume, the devcontainer runs:
 
 ```bash
-npm install --include=dev
-npm run codespaces:bootstrap -- --prepare-only
-npm run codespaces:bootstrap
+npm install -g clawdex-mobile@latest @openai/codex
+CLAWDEX_WORKSPACE_ROOT="$PWD" node "$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js" --prepare-only
+CLAWDEX_WORKSPACE_ROOT="$PWD" node "$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js"
 ```
 
 `--prepare-only` front-loads the slow first-boot work during Codespace creation:
 
 - prepares `.env.secure` for `BRIDGE_NETWORK_MODE=codespaces`
-- installs `codex` if needed
-- prebuilds the Rust bridge binary without starting it
+- ensures `codex` is available
+- prebuilds the bridge binary from the installed package without starting it
 
 The normal bootstrap then:
 
@@ -41,12 +39,4 @@ The mobile app should connect to the forwarded HTTPS URL:
 
 ```text
 https://<codespace>-8787.app.github.dev
-```
-
-## Local Commands
-
-```bash
-npm run codespaces:bootstrap -- --prepare-only
-npm run codespaces:bootstrap
-npm run secure:bridge
 ```
