@@ -16,6 +16,6 @@
       "onAutoForward": "silent"
     }
   },
-  "postCreateCommand": "npm install --include=dev && npm run codespaces:bootstrap -- --prepare-only",
-  "postStartCommand": "npm run codespaces:bootstrap"
+  "postCreateCommand": "bash -lc 'npm install -g clawdex-mobile@latest @openai/codex && CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" --prepare-only'",
+  "postStartCommand": "bash -lc 'CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\"'"
 }
