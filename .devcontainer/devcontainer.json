@@ -16,6 +16,6 @@
       "onAutoForward": "silent"
     }
   },
-  "postCreateCommand": "bash -lc 'npm install -g clawdex-mobile@latest @openai/codex && CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" --prepare-only'",
+  "postCreateCommand": "bash -lc 'npm install -g clawdex-mobile@internal @openai/codex && CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" --prepare-only'",
   "postStartCommand": "bash -lc 'CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\"'"
 }

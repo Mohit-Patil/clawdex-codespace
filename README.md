@@ -5,13 +5,14 @@ Minimal GitHub Codespaces template repo for Clawdex.
 This template no longer vendors the Clawdex scripts or Rust bridge source. The
 Codespace installs the published `clawdex-mobile` npm package during
 `postCreateCommand`, then runs the packaged Codespaces bootstrap from there.
+The template is currently pinned to the `internal` npm dist-tag for testing.
 
 ## What Happens In Codespaces
 
 On create/resume, the devcontainer runs:
 
 ```bash
-npm install -g clawdex-mobile@latest @openai/codex
+npm install -g clawdex-mobile@internal @openai/codex
 CLAWDEX_WORKSPACE_ROOT="$PWD" node "$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js" --prepare-only
 CLAWDEX_WORKSPACE_ROOT="$PWD" node "$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js"
 ```
