@@ -4,14 +4,15 @@ Minimal GitHub Codespaces template repo for Clawdex.
 
 This template does not vendor the Clawdex scripts or Rust bridge source. The
 Codespace installs the published `clawdex-mobile` npm package during
-`updateContentCommand`, then runs the packaged Codespaces bootstrap from there.
-That makes the package install part of GitHub Codespaces prebuilds instead of
-doing it after every new Codespace is created. The template is currently pinned
-to the `internal` npm dist-tag for testing.
+`postCreateCommand`, then runs the packaged Codespaces bootstrap from there.
+The install deliberately runs when the actual Codespace is created instead of
+being baked into a prebuild template, because the Codex binary is large enough
+to make prebuild template creation and restore slower than the install itself.
+The template is currently pinned to the `internal` npm dist-tag for testing.
 
 ## What Happens In Codespaces
 
-On create/prebuild, the devcontainer runs:
+On create, the devcontainer runs:
 
 ```bash
 npm install -g --no-fund --no-audit clawdex-mobile@internal @openai/codex
@@ -39,12 +40,12 @@ developer tools needed for bootstrap.
 
 ## Prebuilds
 
-Prebuilds are optional for this template. The runtime package install is small
-enough that GitHub's prebuild image creation and upload can be slower than a
-normal Codespace create. If prebuilds are enabled, keep only one retained
-prebuild version and avoid unnecessary target regions.
+Prebuilds are not recommended for this template right now. The runtime package
+install is small enough that GitHub's prebuild image creation and upload can be
+slower than a normal Codespace create. If prebuilds are enabled, keep only one
+retained prebuild version and avoid unnecessary target regions.
 
-Codespaces waits for `updateContentCommand`, not the post-start bridge bootstrap. That keeps the install inside the prebuild while allowing the editor and app to open as soon as the Codespace is ready. Bootstrap logs live at `.bridge-bootstrap.log`, bridge logs live at `.bridge.log`, and runtime state files are `.bridge.pid` and `.env.secure`.
+Codespaces waits for `postCreateCommand`, not the post-start bridge bootstrap. That lets the required packages install before bootstrap, while still allowing the editor and app to open without waiting for the bridge health check and QR output. Bootstrap logs live at `.bridge-bootstrap.log`, bridge logs live at `.bridge.log`, and runtime state files are `.bridge.pid` and `.env.secure`.
 
 ## Ports
 
