@@ -1,5 +1,9 @@
 {
   "name": "Clawdex Codespace",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:1-20-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  },
   "forwardPorts": [8787, 8788],
   "portsAttributes": {
     "8787": {
@@ -9,11 +13,6 @@
     "8788": {
       "label": "Clawdex Browser Preview",
       "onAutoForward": "silent"
-    }
-  },
-  "customizations": {
-    "codespaces": {
-      "disableAutomaticConfiguration": true
     }
   },
   "updateContentCommand": "bash -lc 'npm install -g --no-fund --no-audit clawdex-mobile@internal @openai/codex'",

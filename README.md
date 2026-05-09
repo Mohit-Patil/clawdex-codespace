@@ -33,9 +33,9 @@ The bootstrap:
 The template intentionally does not install Rust anymore. The published
 `clawdex-mobile` package already ships a prebuilt Linux bridge binary, so
 Codespace startup does not need a toolchain install or local bridge compile.
-The template also relies on the default GitHub Codespaces image instead of a
-custom image plus devcontainer features, which avoids extra feature image pulls
-during creation.
+The template uses the official JavaScript/Node devcontainer image plus the
+GitHub CLI feature. Prebuilds absorb that setup cost, while keeping `node`,
+`npm`, and authenticated `gh codespace` commands available during bootstrap.
 
 ## Prebuilds
 
