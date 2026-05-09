@@ -33,16 +33,16 @@ The bootstrap:
 The template intentionally does not install Rust anymore. The published
 `clawdex-mobile` package already ships a prebuilt Linux bridge binary, so
 Codespace startup does not need a toolchain install or local bridge compile.
-The template uses the official JavaScript/Node devcontainer image plus the
-GitHub CLI feature. Prebuilds absorb that setup cost, while keeping `node`,
-`npm`, and authenticated `gh codespace` commands available during bootstrap.
+The template also avoids a custom devcontainer image and feature build. It lets
+Codespaces use GitHub's managed default image, which already has the standard
+developer tools needed for bootstrap.
 
 ## Prebuilds
 
-Enable a prebuild for the `main` branch in the repository's Codespaces settings.
-Use the default prebuild trigger or a schedule that matches internal package
-testing. Keep only one retained prebuild version unless you need rollback
-coverage.
+Prebuilds are optional for this template. The runtime package install is small
+enough that GitHub's prebuild image creation and upload can be slower than a
+normal Codespace create. If prebuilds are enabled, keep only one retained
+prebuild version and avoid unnecessary target regions.
 
 Codespaces waits for `updateContentCommand`, not the post-start bridge bootstrap. That keeps the install inside the prebuild while allowing the editor and app to open as soon as the Codespace is ready. Bootstrap logs live at `.bridge-bootstrap.log`, bridge logs live at `.bridge.log`, and runtime state files are `.bridge.pid` and `.env.secure`.
 
