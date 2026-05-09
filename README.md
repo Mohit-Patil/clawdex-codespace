@@ -20,7 +20,7 @@ npm install -g --no-fund --no-audit clawdex-mobile@internal @openai/codex
 On start/resume, it runs:
 
 ```bash
-CLAWDEX_WORKSPACE_ROOT="$PWD" node "$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js"
+nohup env CLAWDEX_WORKSPACE_ROOT="$PWD" node "$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js" > .bridge-bootstrap.log 2>&1 < /dev/null &
 ```
 
 The bootstrap:
@@ -44,7 +44,7 @@ Use the default prebuild trigger or a schedule that matches internal package
 testing. Keep only one retained prebuild version unless you need rollback
 coverage.
 
-Bridge logs live at `.bridge.log` in the repo root. Runtime state files are `.bridge.pid` and `.env.secure`.
+Codespaces waits for `updateContentCommand`, not the post-start bridge bootstrap. That keeps the install inside the prebuild while allowing the editor and app to open as soon as the Codespace is ready. Bootstrap logs live at `.bridge-bootstrap.log`, bridge logs live at `.bridge.log`, and runtime state files are `.bridge.pid` and `.env.secure`.
 
 ## Ports
 
