@@ -11,7 +11,7 @@
       "onAutoForward": "silent"
     }
   },
-  "postCreateCommand": "bash -lc 'npm install -g --no-fund --no-audit clawdex-mobile@internal @openai/codex'",
+  "updateContentCommand": "bash -lc 'npm install -g --no-fund --no-audit clawdex-mobile@internal @openai/codex'",
   "postStartCommand": "bash -lc 'env CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" > .bridge-bootstrap.log 2>&1'",
-  "waitFor": "postCreateCommand"
+  "waitFor": "updateContentCommand"
 }
