@@ -21,14 +21,14 @@ npm install -g --no-fund --no-audit clawdex-mobile@internal @openai/codex
 On start/resume, it runs:
 
 ```bash
-nohup env CLAWDEX_WORKSPACE_ROOT="$PWD" node "$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js" > .bridge-bootstrap.log 2>&1 < /dev/null &
+env CLAWDEX_WORKSPACE_ROOT="$PWD" node "$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js" > .bridge-bootstrap.log 2>&1
 ```
 
 The bootstrap:
 
 - prepares `.env.secure` for `BRIDGE_NETWORK_MODE=codespaces`
 - enables GitHub bearer auth for the current Codespace
-- starts the bridge in the background
+- starts the bridge in the background and waits until `/health` responds
 - re-applies public visibility to bridge ports when possible
 
 The template intentionally does not install Rust anymore. The published
@@ -45,7 +45,7 @@ install is small enough that GitHub's prebuild image creation and upload can be
 slower than a normal Codespace create. If prebuilds are enabled, keep only one
 retained prebuild version and avoid unnecessary target regions.
 
-Codespaces waits for `postCreateCommand`, not the post-start bridge bootstrap. That lets the required packages install before bootstrap, while still allowing the editor and app to open without waiting for the bridge health check and QR output. Bootstrap logs live at `.bridge-bootstrap.log`, bridge logs live at `.bridge.log`, and runtime state files are `.bridge.pid` and `.env.secure`.
+Codespaces waits for `postCreateCommand`, then runs the post-start bridge bootstrap and records its output in `.bridge-bootstrap.log`. The bootstrap itself starts the bridge in the background, waits until `/health` responds, and fails visibly if the bridge cannot become healthy. Bridge logs live at `.bridge.log`, and runtime state files are `.bridge.pid` and `.env.secure`.
 
 ## Ports
 
