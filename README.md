@@ -18,7 +18,7 @@ On create or prebuild refresh, the devcontainer runs:
 npm install -g --no-fund --no-audit clawdex-mobile@internal @openai/codex
 ```
 
-On start/resume, it runs:
+On create and on later start/resume, it runs:
 
 ```bash
 env CLAWDEX_WORKSPACE_ROOT="$PWD" node "$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js" > .bridge-bootstrap.log 2>&1
@@ -46,7 +46,7 @@ prebuild version and avoid unnecessary target regions; prebuild creation can
 still take several minutes because GitHub has to create and upload the template
 image.
 
-Codespaces waits for `updateContentCommand`, then runs the post-start bridge bootstrap and records its output in `.bridge-bootstrap.log`. The bootstrap itself starts the bridge in the background, waits until `/health` responds, and fails visibly if the bridge cannot become healthy. Bridge logs live at `.bridge.log`, and runtime state files are `.bridge.pid` and `.env.secure`.
+Codespaces waits for `postCreateCommand`, so API-created Codespaces do not report ready before the bridge bootstrap has run. The bootstrap itself starts the bridge in the background, waits until `/health` responds, and fails visibly if the bridge cannot become healthy. Bridge logs live at `.bridge.log`, and runtime state files are `.bridge.pid` and `.env.secure`.
 
 ## Ports
 
