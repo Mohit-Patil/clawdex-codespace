@@ -11,8 +11,8 @@
       "onAutoForward": "silent"
     }
   },
-  "updateContentCommand": "bash -lc 'npm install -g --no-fund --no-audit clawdex-mobile@internal @openai/codex && rm -f .bridge.pid && env CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" > .bridge-bootstrap.log 2>&1'",
-  "postCreateCommand": "bash -lc 'rm -f .bridge.pid; env CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" > .bridge-bootstrap.log 2>&1'",
-  "postStartCommand": "bash -lc 'rm -f .bridge.pid; env CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" > .bridge-bootstrap.log 2>&1'",
+  "updateContentCommand": "bash -lc 'npm install -g --no-fund --no-audit clawdex-mobile@internal @openai/codex && rm -f .bridge.pid && nohup env CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" > .bridge-bootstrap.log 2>&1 < /dev/null &'",
+  "postCreateCommand": "bash -lc 'rm -f .bridge.pid; nohup env CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" > .bridge-bootstrap.log 2>&1 < /dev/null &'",
+  "postStartCommand": "bash -lc 'rm -f .bridge.pid; nohup env CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" > .bridge-bootstrap.log 2>&1 < /dev/null &'",
   "waitFor": "updateContentCommand"
 }
