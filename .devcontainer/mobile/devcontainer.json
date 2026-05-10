@@ -16,7 +16,7 @@
     }
   },
   "updateContentCommand": "bash -lc 'rm -f .git/hooks/post-commit && npm install -g --no-fund --no-audit clawdex-mobile@internal @openai/codex'",
-  "postCreateCommand": "bash -lc 'env CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" > .bridge-bootstrap.log 2>&1'",
-  "postStartCommand": "bash -lc 'env CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" > .bridge-bootstrap.log 2>&1'",
-  "waitFor": "postCreateCommand"
+  "postCreateCommand": "bash -lc 'env BRIDGE_CODESPACES_AUTO_PUBLIC=false CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" > .bridge-bootstrap.log 2>&1'",
+  "postStartCommand": "bash -lc 'env BRIDGE_CODESPACES_AUTO_PUBLIC=false CLAWDEX_WORKSPACE_ROOT=\"$PWD\" node \"$(npm root -g)/clawdex-mobile/scripts/codespaces-bootstrap.js\" > .bridge-bootstrap.log 2>&1'",
+  "waitFor": "updateContentCommand"
 }
